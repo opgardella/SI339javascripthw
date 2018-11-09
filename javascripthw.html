@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html, body {
+            margin:0;
+        }
+    </style>
+</head>
+<body onload="init()">
+    <canvas id="draw" width="800px" height="500px" style="border:2px solid #000000;">
+
+    </canvas>
+
+
+    <script>
+        // to look at: https://www.w3schools.com/graphics/tryit.asp?filename=trygame_default_gravity
+        // good reference: http://www.mattmorgante.com/technology/javascript-draw-html5-canvas
+
+        const canvas = document.querySelector('#draw');
+        const ctx = canvas.getContext("2d")
+
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 20;
+        ctx.strokeStyle = '#ac0000';
+        
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        var r = 10;
+        ctx.fillStyle = '#FF0000';
+
+        // function to make pen draw
+        function pen(e) {
+            console.log(e);
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            // ctx.arc(x, y, radius, startAngle, endAngle [, anticlockwise])
+            // from: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
+            ctx.arc(lastX,lastY,r,0,Math.PI*2,true);
+            ctx.fill();
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        });
+
+
+        // keyCode: https://www.w3schools.com/jsref/event_key_keycode.asp
+        // TO GET CODES FOR KEYS: https://keycode.info/
+        // KeyCode map: http://www.javascriptkit.com/jsref/eventkeyboardmouse.shtml
+        // Colors: https://www.w3schools.com/cssref/css_colors_legal.asp 
+        // Colors: https://www.w3schools.com/colors/colors_names.asp
+        // How to clear rectangle: https://www.w3schools.com/tags/canvas_clearrect.asp
+        // ctx.fillStyle: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle 
+
+        // function to change pen color and size using keys
+        function modify(draw) {
+            var pen = draw.keyCode;
+
+            // b key = 66 --> change color to blue
+            if (pen==66) {
+                ctx.fillStyle = 'blue';
+            }
+
+            // g key = 71 --> change color to green
+            if (pen==71){
+                ctx.fillStyle = 'green';
+            }
+
+            // r key = 82 --> change color to red
+            if (pen==82){
+                ctx.fillStyle = 'red';
+            }
+
+            // y key = 89 --> change color to yellow
+            if (pen==89){
+                ctx.fillStyle = 'yellow';
+            }
+
+            // up arrow = 38 --> make pen bigger
+            if (pen==38){
+                r += 1;
+            }
+
+            // down arrow = 40 --> make pen smaller
+            if (pen==40){
+                r -= 1;
+            }
+
+            // space bar = 32 --> clear the canvas
+            if (pen==32){
+                ctx.clearRect(0,0,800,500);
+            }
+        }
+
+        canvas.addEventListener('mousemove', pen);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
+        window.addEventListener('keydown', modify);
+    
+    </script>
+</body>
+</html>
